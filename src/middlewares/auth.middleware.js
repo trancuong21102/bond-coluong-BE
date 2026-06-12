@@ -29,6 +29,7 @@ export default async function authMiddleware(req, res, next) {
         email: true,
         role: true,
         avatar: true,
+        isTrusted: true,
         createdAt: true,
         updatedAt: true,
       },

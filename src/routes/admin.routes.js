@@ -29,6 +29,7 @@ router.use(requireRole('ADMIN'));
 
 // User Management
 router.get('/users', asyncHandler(adminController.getUsers));
+router.patch('/users/:id/toggle-trusted', asyncHandler(adminController.toggleTrustedUser));
 
 // Category Management
 router.get('/categories', asyncHandler(adminController.getCategories));

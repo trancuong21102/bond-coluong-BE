@@ -1,6 +1,7 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -19,16 +20,18 @@ enum ImageStatus {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  name       String
-  email      String     @unique
-  password   String
-  role       Role       @default(USER)
-  avatar     String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  categories Category[]
-  images     Image[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  email       String     @unique
+  password    String
+  role        Role       @default(USER)
+  avatar      String?
+  isTrusted   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  categories  Category[]
+  images      Image[]
+  savedImages Image[]    @relation("UserSavedImages")
 
   @@map("users")
 }
@@ -63,6 +66,7 @@ model Image {
   isPublic     Boolean     @default(true)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+  savedBy      User[]      @relation("UserSavedImages")
 
   @@map("images")
 }

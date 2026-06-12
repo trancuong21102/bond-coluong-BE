@@ -25,3 +25,23 @@ export const login = async (req, res) => {
 export const me = async (req, res) => {
   return sendSuccess(res, 'Lấy thông tin tài khoản thành công', req.user);
 };
+
+/**
+ * Handle user profile update.
+ */
+export const updateProfile = async (req, res) => {
+  const { name, email } = req.body;
+  const user = await authService.updateProfile(req.user.id, {
+    name,
+    email,
+    file: req.file,
+  });
+  return sendSuccess(res, 'Cập nhật hồ sơ thành công', user);
+};
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  await authService.changePassword(req.user.id, { currentPassword, newPassword });
+  return sendSuccess(res, 'Đổi mật khẩu thành công');
+};
+

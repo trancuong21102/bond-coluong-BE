@@ -11,10 +11,48 @@ export const getAllUsers = async () => {
       email: true,
       role: true,
       avatar: true,
+      isTrusted: true,
       createdAt: true,
       updatedAt: true,
     },
     orderBy: { createdAt: 'desc' },
+  });
+};
+
+/**
+ * Toggle trusted upload privilege for a user.
+ * When isTrusted = true, user's uploads are auto-approved without admin review.
+ */
+export const toggleTrustedUser = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    const error = new Error('Người dùng không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (user.role === 'ADMIN') {
+    const error = new Error('Không thể thay đổi quyền của tài khoản Admin');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return await prisma.user.update({
+    where: { id },
+    data: { isTrusted: !user.isTrusted },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isTrusted: true,
+      avatar: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 };
 

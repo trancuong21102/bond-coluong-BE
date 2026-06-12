@@ -13,6 +13,20 @@ export const getUsers = async (req, res) => {
   return sendSuccess(res, 'Lấy danh sách người dùng thành công', users);
 };
 
+/**
+ * Toggle trusted upload privilege for a user.
+ */
+export const toggleTrustedUser = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const user = await adminService.toggleTrustedUser(id);
+  const status = user.isTrusted ? 'CẤP PHÉP' : 'THU HỒI';
+  return sendSuccess(
+    res,
+    `Đã ${status} quyền đăng ảnh không cần duyệt cho ${user.name}`,
+    user
+  );
+};
+
 // === Category Management ===
 
 /**

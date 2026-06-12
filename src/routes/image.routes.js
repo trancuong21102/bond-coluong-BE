@@ -12,6 +12,10 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get('/my', asyncHandler(imageController.getMyImages));
+router.get('/saved', asyncHandler(imageController.getSavedImages));
+router.get('/saved/ids', asyncHandler(imageController.getSavedImageIds));
+router.post('/:id/save', validate(deleteImageSchema), asyncHandler(imageController.saveImage));
+router.delete('/:id/save', validate(deleteImageSchema), asyncHandler(imageController.unsaveImage));
 
 /**
  * Upload image.

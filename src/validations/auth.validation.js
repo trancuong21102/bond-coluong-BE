@@ -25,3 +25,28 @@ export const loginSchema = {
     password: z.string({ required_error: 'Mật khẩu không được để trống' }),
   }),
 };
+
+export const updateProfileSchema = {
+  body: z.object({
+    name: z.string()
+      .min(2, 'Tên phải chứa ít nhất 2 ký tự')
+      .max(50, 'Tên không được vượt quá 50 ký tự')
+      .trim()
+      .optional(),
+    email: z.string()
+      .email('Email không đúng định dạng')
+      .trim()
+      .toLowerCase()
+      .optional(),
+  }),
+};
+
+export const changePasswordSchema = {
+  body: z.object({
+    currentPassword: z.string({ required_error: 'Mật khẩu hiện tại không được để trống' }),
+    newPassword: z.string({ required_error: 'Mật khẩu mới không được để trống' })
+      .min(6, 'Mật khẩu mới phải chứa ít nhất 6 ký tự')
+      .max(100, 'Mật khẩu mới không được vượt quá 100 ký tự'),
+  }),
+};
+

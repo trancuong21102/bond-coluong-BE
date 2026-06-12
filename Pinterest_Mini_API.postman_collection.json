@@ -2,12 +2,13 @@
   "info": {
     "_postman_id": "d0f19c96-3a72-4682-8b83-c7908b8b0e77",
     "name": "Pinterest Mini API",
-    "description": "Bộ Collection kiểm thử tất cả các API cho Pinterest Mini Backend bao gồm Auth, Public, User và Admin.",
+    "description": "Bộ Collection kiểm thử tất cả các API cho Pinterest Mini Backend bao gồm Auth, Public, User Images, User Categories, Saved Images và Admin.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
       "name": "1. Authentication",
+      "description": "Đăng ký, đăng nhập, xem & cập nhật hồ sơ, đổi mật khẩu.",
       "item": [
         {
           "name": "Register User",
@@ -25,14 +26,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
             }
           },
           "response": []
@@ -53,14 +48,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -81,14 +70,8 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -98,26 +81,80 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/auth/me",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "me"
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": [],
+                  "description": "File ảnh đại diện (jpg, jpeg, png, webp) - tuỳ chọn"
+                },
+                {
+                  "key": "name",
+                  "value": "Tên mới của tôi",
+                  "type": "text",
+                  "description": "Tên hiển thị - tuỳ chọn"
+                },
+                {
+                  "key": "bio",
+                  "value": "Giới thiệu bản thân ngắn gọn",
+                  "type": "text",
+                  "description": "Tiểu sử - tuỳ chọn"
+                }
               ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"User@123\",\n  \"newPassword\": \"NewPass@456\",\n  \"confirmPassword\": \"NewPass@456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "change-password"]
             }
           },
           "response": []
@@ -126,6 +163,7 @@
     },
     {
       "name": "2. Public API",
+      "description": "API công khai không cần xác thực.",
       "item": [
         {
           "name": "Get Public Categories",
@@ -134,14 +172,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "public",
-                "categories"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "categories"]
             }
           },
           "response": []
@@ -153,15 +185,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/categories/thien-nhien",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "public",
-                "categories",
-                "thien-nhien"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "categories", "thien-nhien"]
             }
           },
           "response": []
@@ -173,16 +198,8 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/categories/thien-nhien/images",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "public",
-                "categories",
-                "thien-nhien",
-                "images"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "categories", "thien-nhien", "images"]
             }
           },
           "response": []
@@ -194,38 +211,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/images?page=1&limit=10&search=nui",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "public",
-                "images"
-              ],
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "images"],
               "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                },
-                {
-                  "key": "search",
-                  "value": "nui",
-                  "description": "Từ khóa tìm kiếm theo title hoặc description"
-                },
-                {
-                  "key": "categoryId",
-                  "value": "1",
-                  "disabled": true
-                },
-                {
-                  "key": "categorySlug",
-                  "value": "thien-nhien",
-                  "disabled": true
-                }
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "nui", "description": "Từ khóa tìm kiếm theo title hoặc description" },
+                { "key": "categoryId", "value": "1", "disabled": true },
+                { "key": "categorySlug", "value": "thien-nhien", "disabled": true }
               ]
             }
           },
@@ -238,15 +231,21 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/images/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "public",
-                "images",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "images", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Related Images",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/public/images/1/related",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "images", "1", "related"]
             }
           },
           "response": []
@@ -255,32 +254,21 @@
     },
     {
       "name": "3. User Categories",
+      "description": "Quản lý danh mục của user đang đăng nhập. Yêu cầu Bearer Token.",
       "item": [
         {
           "name": "Get My Categories",
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/categories/my",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "my"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "my"]
             }
           },
           "response": []
@@ -290,13 +278,7 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "POST",
             "header": [],
@@ -309,32 +291,15 @@
                   "src": [],
                   "description": "File ảnh bìa (jpg, jpeg, png, webp)"
                 },
-                {
-                  "key": "name",
-                  "value": "Thiên nhiên",
-                  "type": "text"
-                },
-                {
-                  "key": "description",
-                  "value": "Ảnh về danh mục phong cảnh thiên nhiên",
-                  "type": "text"
-                },
-                {
-                  "key": "isPublic",
-                  "value": "true",
-                  "type": "text"
-                }
+                { "key": "name", "value": "Thiên nhiên", "type": "text" },
+                { "key": "description", "value": "Ảnh về danh mục phong cảnh thiên nhiên", "type": "text" },
+                { "key": "isPublic", "value": "true", "type": "text" }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
             }
           },
           "response": []
@@ -344,13 +309,7 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "PUT",
             "header": [],
@@ -363,33 +322,15 @@
                   "src": [],
                   "description": "File ảnh bìa (jpg, jpeg, png, webp)"
                 },
-                {
-                  "key": "name",
-                  "value": "Thiên nhiên núi rừng",
-                  "type": "text"
-                },
-                {
-                  "key": "description",
-                  "value": "Cập nhật ảnh về núi rừng",
-                  "type": "text"
-                },
-                {
-                  "key": "isPublic",
-                  "value": "true",
-                  "type": "text"
-                }
+                { "key": "name", "value": "Thiên nhiên núi rừng", "type": "text" },
+                { "key": "description", "value": "Cập nhật ảnh về núi rừng", "type": "text" },
+                { "key": "isPublic", "value": "true", "type": "text" }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/categories/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "1"]
             }
           },
           "response": []
@@ -399,26 +340,14 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/categories/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories", "1"]
             }
           },
           "response": []
@@ -427,32 +356,21 @@
     },
     {
       "name": "4. User Images",
+      "description": "Upload, xem và xóa ảnh của user. Yêu cầu Bearer Token.",
       "item": [
         {
           "name": "Get My Images",
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/my",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "images",
-                "my"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "my"]
             }
           },
           "response": []
@@ -462,13 +380,7 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "POST",
             "header": [],
@@ -481,37 +393,16 @@
                   "src": [],
                   "description": "File ảnh (jpg, jpeg, png, webp) giới hạn 5MB"
                 },
-                {
-                  "key": "title",
-                  "value": "Ảnh núi tuyết",
-                  "type": "text"
-                },
-                {
-                  "key": "description",
-                  "value": "Một bức ảnh tuyệt đẹp về núi tuyết",
-                  "type": "text"
-                },
-                {
-                  "key": "categoryId",
-                  "value": "1",
-                  "type": "text"
-                },
-                {
-                  "key": "isPublic",
-                  "value": "true",
-                  "type": "text"
-                }
+                { "key": "title", "value": "Ảnh núi tuyết", "type": "text" },
+                { "key": "description", "value": "Một bức ảnh tuyệt đẹp về núi tuyết", "type": "text" },
+                { "key": "categoryId", "value": "1", "type": "text" },
+                { "key": "isPublic", "value": "true", "type": "text" }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/images",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "images"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images"]
             }
           },
           "response": []
@@ -521,26 +412,14 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "images",
-                "1"
-              ]
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "1"]
             }
           },
           "response": []
@@ -548,486 +427,382 @@
       ]
     },
     {
-      "name": "5. Admin Management",
+      "name": "5. Saved Images",
+      "description": "Lưu / bỏ lưu / xem ảnh đã lưu. Yêu cầu Bearer Token.",
       "item": [
         {
-          "name": "Get All Users",
+          "name": "Get My Saved Images",
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/admin/users",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "users"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Categories",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "categories"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Create Category",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "coverImage",
-                  "type": "file",
-                  "src": [],
-                  "description": "File ảnh bìa (jpg, jpeg, png, webp)"
-                },
-                {
-                  "key": "name",
-                  "value": "Admin Category",
-                  "type": "text"
-                },
-                {
-                  "key": "description",
-                  "value": "Tạo bởi Admin",
-                  "type": "text"
-                },
-                {
-                  "key": "isPublic",
-                  "value": "true",
-                  "type": "text"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/categories",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "categories"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Update Category",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "coverImage",
-                  "type": "file",
-                  "src": [],
-                  "description": "File ảnh bìa (jpg, jpeg, png, webp)"
-                },
-                {
-                  "key": "name",
-                  "value": "Admin Category Updated",
-                  "type": "text"
-                },
-                {
-                  "key": "description",
-                  "value": "Cập nhật bởi Admin",
-                  "type": "text"
-                },
-                {
-                  "key": "isPublic",
-                  "value": "false",
-                  "type": "text"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/categories/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "categories",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Toggle Category Public",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/categories/1/toggle-public",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "categories",
-                "1",
-                "toggle-public"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Delete Category",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/categories/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "categories",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Get All Images (Filters & Search)",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/images?status=PENDING&page=1&limit=10&search=nui",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "images"
-              ],
+              "raw": "{{baseUrl}}/api/images/saved?page=1&limit=12",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "saved"],
               "query": [
-                {
-                  "key": "status",
-                  "value": "PENDING"
-                },
-                {
-                  "key": "categoryId",
-                  "value": "1",
-                  "disabled": true
-                },
-                {
-                  "key": "uploadedById",
-                  "value": "2",
-                  "disabled": true
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                },
-                {
-                  "key": "search",
-                  "value": "nui"
-                }
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "12" }
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Admin Upload Image (Auto approved)",
+          "name": "Get My Saved Image IDs",
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/images/saved/ids",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "saved", "ids"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Save Image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "POST",
             "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "image",
-                  "type": "file",
-                  "src": [],
-                  "description": "File ảnh (jpg, jpeg, png, webp)"
-                },
-                {
-                  "key": "title",
-                  "value": "Ảnh admin đăng trực tiếp",
-                  "type": "text"
-                },
-                {
-                  "key": "description",
-                  "value": "Ảnh được đăng tải bởi tài khoản admin",
-                  "type": "text"
-                },
-                {
-                  "key": "categoryId",
-                  "value": "1",
-                  "type": "text"
-                },
-                {
-                  "key": "isPublic",
-                  "value": "true",
-                  "type": "text"
-                }
-              ]
-            },
             "url": {
-              "raw": "{{baseUrl}}/api/admin/images",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "images"
-              ]
+              "raw": "{{baseUrl}}/api/images/1/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "1", "save"]
             }
           },
           "response": []
         },
         {
-          "name": "Admin Approve Image",
+          "name": "Unsave Image",
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/images/1/approve",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "images",
-                "1",
-                "approve"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Reject Image",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PATCH",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"rejectReason\": \"Ảnh không rõ nét hoặc không đúng chủ đề danh mục\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/images/1/reject",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "images",
-                "1",
-                "reject"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Toggle Image Public",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/images/1/toggle-public",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "images",
-                "1",
-                "toggle-public"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Admin Delete Image",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
             },
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/admin/images/1",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "admin",
-                "images",
-                "1"
-              ]
+              "raw": "{{baseUrl}}/api/images/1/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "images", "1", "save"]
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Admin Management",
+      "description": "Quản trị toàn hệ thống. Yêu cầu Bearer Token với role ADMIN.",
+      "item": [
+        {
+          "name": "── User Management ──",
+          "item": [
+            {
+              "name": "Get All Users",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/users",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "users"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Toggle Trusted User (Cấp/Thu hồi quyền đăng không duyệt)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/users/1/toggle-trusted",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "users", "1", "toggle-trusted"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "── Category Management ──",
+          "item": [
+            {
+              "name": "Admin Get All Categories",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/categories",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "categories"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Create Category",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "coverImage",
+                      "type": "file",
+                      "src": [],
+                      "description": "File ảnh bìa (jpg, jpeg, png, webp)"
+                    },
+                    { "key": "name", "value": "Admin Category", "type": "text" },
+                    { "key": "description", "value": "Tạo bởi Admin", "type": "text" },
+                    { "key": "isPublic", "value": "true", "type": "text" }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/categories",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "categories"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Update Category",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "coverImage",
+                      "type": "file",
+                      "src": [],
+                      "description": "File ảnh bìa (jpg, jpeg, png, webp)"
+                    },
+                    { "key": "name", "value": "Admin Category Updated", "type": "text" },
+                    { "key": "description", "value": "Cập nhật bởi Admin", "type": "text" },
+                    { "key": "isPublic", "value": "false", "type": "text" }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/categories/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "categories", "1"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Toggle Category Public",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/categories/1/toggle-public",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "categories", "1", "toggle-public"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Delete Category",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/categories/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "categories", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "── Image Management ──",
+          "item": [
+            {
+              "name": "Admin Get All Images (Filters & Search)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/images?status=PENDING&page=1&limit=10&search=nui",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "images"],
+                  "query": [
+                    { "key": "status", "value": "PENDING", "description": "PENDING | APPROVED | REJECTED" },
+                    { "key": "categoryId", "value": "1", "disabled": true },
+                    { "key": "uploadedById", "value": "2", "disabled": true },
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "10" },
+                    { "key": "search", "value": "nui" }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Upload Image (Auto Approved)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": [],
+                      "description": "File ảnh (jpg, jpeg, png, webp)"
+                    },
+                    { "key": "title", "value": "Ảnh admin đăng trực tiếp", "type": "text" },
+                    { "key": "description", "value": "Ảnh được đăng tải bởi tài khoản admin", "type": "text" },
+                    { "key": "categoryId", "value": "1", "type": "text" },
+                    { "key": "isPublic", "value": "true", "type": "text" }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/images",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "images"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Approve Image",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/images/1/approve",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "images", "1", "approve"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Reject Image",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rejectReason\": \"Ảnh không rõ nét hoặc không đúng chủ đề danh mục\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/images/1/reject",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "images", "1", "reject"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Toggle Image Public",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/images/1/toggle-public",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "images", "1", "toggle-public"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Admin Delete Image",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/admin/images/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "admin", "images", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }
