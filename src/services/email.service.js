@@ -7,10 +7,11 @@ let transporter;
 export const initEmailService = async () => {
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
     // Sử dụng SMTP thật từ .env
+    const port = parseInt(process.env.SMTP_PORT || '465', 10);
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: process.env.SMTP_PORT || 465,
-      secure: true,
+      port: port,
+      secure: port === 465, // true for 465, false for 587
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
