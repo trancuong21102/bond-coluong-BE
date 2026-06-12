@@ -85,7 +85,10 @@ export const sendAccessRequestEmail = async ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          sender: { name: 'Pinterest Mini', email: 'no-reply@pinterestmini.com' },
+          sender: { 
+            name: 'Pinterest Mini', 
+            email: process.env.SMTP_USER || 'no-reply@pinterestmini.com' 
+          },
           to: [{ email: toEmail }],
           subject: `[Pinterest Mini] ${requesterName} xin cấp quyền xem danh mục ${categoryName}`,
           htmlContent: htmlTemplate,
