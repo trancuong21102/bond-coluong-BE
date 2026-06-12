@@ -33,8 +33,8 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 // Mount API Modules
 app.use('/api/auth', authRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/categories', accessRoutes); // Mount accessRoutes before categoryRoutes to avoid global authMiddleware
 app.use('/api/categories', categoryRoutes);
-app.use('/api/categories', accessRoutes); // Mount accessRoutes under categories
 app.use('/api/images', imageRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
