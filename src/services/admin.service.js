@@ -1,0 +1,187 @@
+import prisma from '../config/prisma.js';
+
+/**
+ * Get all users registered on the platform.
+ */
+export const getAllUsers = async () => {
+  return await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      avatar: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+/**
+ * Get all categories on the platform.
+ */
+export const getAllCategories = async () => {
+  return await prisma.category.findMany({
+    include: {
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      _count: {
+        select: { images: true },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+/**
+ * Switch public visibility state for a category.
+ */
+export const toggleCategoryPublic = async (id) => {
+  const category = await prisma.category.findUnique({
+    where: { id },
+  });
+
+  if (!category) {
+    const error = new Error('Danh mục không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.category.update({
+    where: { id },
+    data: {
+      isPublic: !category.isPublic,
+    },
+  });
+};
+
+/**
+ * Get all images on the platform with administrative filters.
+ */
+export const getAllImages = async ({ status, categoryId, uploadedById, page = 1, limit = 10, search }) => {
+  const skip = (page - 1) * limit;
+
+  // Build admin filters
+  const where = {};
+  if (status) where.status = status;
+  if (categoryId) where.categoryId = categoryId;
+  if (uploadedById) where.uploadedById = uploadedById;
+
+  if (search) {
+    where.OR = [
+      { title: { contains: search } },
+      { description: { contains: search } },
+    ];
+  }
+
+  const [totalItems, items] = await Promise.all([
+    prisma.image.count({ where }),
+    prisma.image.findMany({
+      where,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        uploadedBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
+
+  return {
+    images: items,
+    pagination: {
+      totalItems,
+      page,
+      limit,
+      totalPages: Math.ceil(totalItems / limit),
+    },
+  };
+};
+
+/**
+ * Approve image. Status becomes APPROVED, rejectReason cleared.
+ */
+export const approveImage = async (id) => {
+  const image = await prisma.image.findUnique({
+    where: { id },
+  });
+
+  if (!image) {
+    const error = new Error('Hình ảnh không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.image.update({
+    where: { id },
+    data: {
+      status: 'APPROVED',
+      rejectReason: null,
+    },
+  });
+};
+
+/**
+ * Reject image. Status becomes REJECTED, rejectReason stored.
+ */
+export const rejectImage = async (id, rejectReason) => {
+  const image = await prisma.image.findUnique({
+    where: { id },
+  });
+
+  if (!image) {
+    const error = new Error('Hình ảnh không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.image.update({
+    where: { id },
+    data: {
+      status: 'REJECTED',
+      rejectReason,
+    },
+  });
+};
+
+/**
+ * Toggle image public visibility.
+ */
+export const toggleImagePublic = async (id) => {
+  const image = await prisma.image.findUnique({
+    where: { id },
+  });
+
+  if (!image) {
+    const error = new Error('Hình ảnh không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.image.update({
+    where: { id },
+    data: {
+      isPublic: !image.isPublic,
+    },
+  });
+};

@@ -1,0 +1,68 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ImageStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String
+  email      String     @unique
+  password   String
+  role       Role       @default(USER)
+  avatar     String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  categories Category[]
+  images     Image[]
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  coverImage  String?
+  isPublic    Boolean  @default(true)
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  images      Image[]
+
+  @@map("categories")
+}
+
+model Image {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String?     @db.Text
+  imageUrl     String
+  categoryId   Int
+  category     Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  uploadedById Int
+  uploadedBy   User        @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  status       ImageStatus @default(PENDING)
+  rejectReason String?     @db.Text
+  isPublic     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("images")
+}
