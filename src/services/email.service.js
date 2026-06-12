@@ -5,8 +5,13 @@ dotenv.config();
 let transporter;
 
 export const initEmailService = async () => {
+  if (process.env.BREVO_API_KEY) {
+    console.log('Email service initialized with Brevo HTTP API (Bypass Firewall)');
+    return; // Không cần khởi tạo Nodemailer
+  }
+
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    // Sử dụng SMTP thật từ .env
+    // Sử dụng SMTP thật từ .env (Thường dùng cho Local)
     const port = parseInt(process.env.SMTP_PORT || '465', 10);
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -44,7 +49,7 @@ export const sendAccessRequestEmail = async ({
   categoryName,
   approvalLink
 }) => {
-  if (!transporter) await initEmailService();
+  if (!transporter && !process.env.BREVO_API_KEY) await initEmailService();
 
   const htmlTemplate = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
@@ -70,6 +75,38 @@ export const sendAccessRequestEmail = async ({
     </div>
   `;
 
+  // 1. Nếu có BREVO_API_KEY -> Gửi qua cổng HTTP (443) cực kỳ an toàn, không bao giờ bị chặn
+  if (process.env.BREVO_API_KEY) {
+    try {
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sender: { name: 'Pinterest Mini', email: 'no-reply@pinterestmini.com' },
+          to: [{ email: toEmail }],
+          subject: `[Pinterest Mini] ${requesterName} xin cấp quyền xem danh mục ${categoryName}`,
+          htmlContent: htmlTemplate,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Brevo API Error:', errorData);
+        throw new Error('Lỗi gửi mail API');
+      }
+
+      console.log('Email sent successfully via Brevo HTTP API');
+      return await response.json();
+    } catch (error) {
+      console.error('Error sending via Brevo:', error);
+      throw new Error('Lỗi khi gửi email qua API HTTP');
+    }
+  }
+
+  // 2. Nếu không dùng Brevo, chạy SMTP bình thường (thường dùng ở Local)
   try {
     const info = await transporter.sendMail({
       from: '"Pinterest Mini" <no-reply@pinterestmini.com>',
@@ -78,14 +115,14 @@ export const sendAccessRequestEmail = async ({
       html: htmlTemplate,
     });
 
-    console.log('Email sent: %s', info.messageId);
+    console.log('Email sent via SMTP: %s', info.messageId);
     if (info.messageId && !process.env.SMTP_USER) {
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     }
     
     return info;
   } catch (error) {
-    console.error('Error sending email:', error);
-    throw new Error('Lỗi khi gửi email');
+    console.error('Error sending email via SMTP:', error);
+    throw new Error('Lỗi khi gửi email (Timeout/SMTP blocked)');
   }
 };
