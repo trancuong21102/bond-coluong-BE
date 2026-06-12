@@ -30,12 +30,15 @@ router.use(requireRole('ADMIN'));
 // User Management
 router.get('/users', asyncHandler(adminController.getUsers));
 router.patch('/users/:id/toggle-trusted', asyncHandler(adminController.toggleTrustedUser));
+router.patch('/users/:id/toggle-category-trusted', asyncHandler(adminController.toggleCategoryTrustedUser));
 
 // Category Management
 router.get('/categories', asyncHandler(adminController.getCategories));
 router.post('/categories', upload.single('coverImage'), validate(createCategorySchema), asyncHandler(adminController.createCategory));
 router.put('/categories/:id', upload.single('coverImage'), validate(updateCategorySchema), asyncHandler(adminController.updateCategory));
 router.delete('/categories/:id', validate(deleteCategorySchema), asyncHandler(adminController.deleteCategory));
+router.patch('/categories/:id/approve', validate(deleteCategorySchema), asyncHandler(adminController.approveCategory));
+router.patch('/categories/:id/reject', validate(deleteCategorySchema), asyncHandler(adminController.rejectCategory));
 router.patch('/categories/:id/toggle-public', validate(deleteCategorySchema), asyncHandler(adminController.toggleCategoryPublic));
 
 // Image Management

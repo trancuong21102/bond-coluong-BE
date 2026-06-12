@@ -20,8 +20,14 @@ export const createCategory = async (req, res) => {
     isPublic,
     userId: req.user.id,
     file: req.file,
+    role: req.user.role,
+    isCategoryTrusted: req.user.isCategoryTrusted,
   });
-  return sendSuccess(res, 'Tạo danh mục thành công', category, 201);
+  const msg =
+    req.user.role === 'ADMIN' || req.user.isCategoryTrusted
+      ? 'Tạo danh mục thành công (Đã được duyệt)'
+      : 'Tạo danh mục thành công, đang chờ quản trị viên duyệt';
+  return sendSuccess(res, msg, category, 201);
 };
 
 /**

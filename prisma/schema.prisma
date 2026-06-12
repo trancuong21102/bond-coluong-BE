@@ -19,35 +19,47 @@ enum ImageStatus {
   REJECTED
 }
 
+enum CategoryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id          Int        @id @default(autoincrement())
-  name        String
-  email       String     @unique
-  password    String
-  role        Role       @default(USER)
-  avatar      String?
-  isTrusted   Boolean    @default(false)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  categories  Category[]
-  images      Image[]
-  savedImages Image[]    @relation("UserSavedImages")
+  id                  Int        @id @default(autoincrement())
+  name                String
+  email               String     @unique
+  password            String
+  role                Role       @default(USER)
+  avatar              String?
+  isTrusted           Boolean    @default(false)
+  isCategoryTrusted   Boolean    @default(false)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  categories          Category[]
+  images              Image[]
+  savedImages         Image[]    @relation("UserSavedImages")
+  followers           Follows[]  @relation("following")
+  following           Follows[]  @relation("follower")
+  comments            Comment[]
 
   @@map("users")
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String   @unique
-  description String?  @db.Text
-  coverImage  String?
-  isPublic    Boolean  @default(true)
-  createdById Int
-  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  images      Image[]
+  id            Int            @id @default(autoincrement())
+  name          String
+  slug          String         @unique
+  description   String?        @db.Text
+  coverImage    String?
+  isPublic      Boolean        @default(true)
+  status        CategoryStatus @default(PENDING)
+  rejectReason  String?        @db.Text
+  createdById   Int
+  createdBy     User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  images        Image[]
 
   @@map("categories")
 }
@@ -67,6 +79,31 @@ model Image {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   savedBy      User[]      @relation("UserSavedImages")
+  comments     Comment[]
 
   @@map("images")
+}
+
+model Follows {
+  followerId  Int
+  followingId Int
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@id([followerId, followingId])
+  @@map("follows")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.Text
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imageId   Int
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
 }

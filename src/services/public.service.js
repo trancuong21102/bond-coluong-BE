@@ -5,7 +5,7 @@ import prisma from '../config/prisma.js';
  */
 export const getPublicCategories = async () => {
   return await prisma.category.findMany({
-    where: { isPublic: true },
+    where: { isPublic: true, status: 'APPROVED' },
     orderBy: { name: 'asc' },
   });
 };
@@ -15,7 +15,7 @@ export const getPublicCategories = async () => {
  */
 export const getPublicCategoryBySlug = async (slug) => {
   const category = await prisma.category.findFirst({
-    where: { slug, isPublic: true },
+    where: { slug, isPublic: true, status: 'APPROVED' },
   });
 
   if (!category) {
@@ -32,7 +32,7 @@ export const getPublicCategoryBySlug = async (slug) => {
  */
 export const getPublicCategoryImages = async (slug) => {
   const category = await prisma.category.findFirst({
-    where: { slug, isPublic: true },
+    where: { slug, isPublic: true, status: 'APPROVED' },
   });
 
   if (!category) {
@@ -64,7 +64,7 @@ export const getPublicCategoryImages = async (slug) => {
  * Retrieve public images list with pagination, filtering, and search options.
  * Double checks category.isPublic = true for safety.
  */
-export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limit = 10, search }) => {
+export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limit = 10, search, currentUserId }) => {
   const skip = (page - 1) * limit;
 
   // Enforce visibility filters: images must be approved, public, and belong to public categories
@@ -73,6 +73,7 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     isPublic: true,
     category: {
       isPublic: true,
+      status: 'APPROVED',
     },
   };
 
@@ -84,6 +85,7 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     where.category = {
       slug: categorySlug,
       isPublic: true,
+      status: 'APPROVED',
     };
   }
 
@@ -94,38 +96,57 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     ];
   }
 
-  const [totalItems, items] = await Promise.all([
-    prisma.image.count({ where }),
-    prisma.image.findMany({
-      where,
-      include: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        uploadedBy: {
-          select: {
-            id: true,
-            name: true,
-            avatar: true,
-          },
+  const totalItems = await prisma.image.count({ where });
+
+  let items = await prisma.image.findMany({
+    where,
+    include: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
         },
       },
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-    }),
-  ]);
+      uploadedBy: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+    },
+    skip,
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // Nếu có currentUserId, kiểm tra xem user đang follow ai để ưu tiên sắp xếp (in-memory per page)
+  // Thực tế ở quy mô lớn cần dùng raw SQL ORDER BY CASE. Ở quy mô nhỏ/page size, ta sort tại memory.
+  if (currentUserId) {
+    const follows = await prisma.follows.findMany({
+      where: { followerId: currentUserId },
+      select: { followingId: true },
+    });
+    const followingIds = follows.map(f => f.followingId);
+
+    if (followingIds.length > 0) {
+      items.sort((a, b) => {
+        const aFollowed = followingIds.includes(a.uploadedById) ? 1 : 0;
+        const bFollowed = followingIds.includes(b.uploadedById) ? 1 : 0;
+        if (aFollowed > bFollowed) return -1;
+        if (aFollowed < bFollowed) return 1;
+        return 0; // Giữ nguyên thứ tự createdAt desc
+      });
+    }
+  }
 
   return {
     images: items,
     pagination: {
       totalItems,
-      page,
-      limit,
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
       totalPages: Math.ceil(totalItems / limit),
     },
   };
@@ -142,6 +163,7 @@ export const getPublicImageById = async (id) => {
       isPublic: true,
       category: {
         isPublic: true,
+        status: 'APPROVED',
       },
     },
     include: {
@@ -182,7 +204,7 @@ export const getRelatedImages = async (id, limit = 12) => {
       id,
       status: 'APPROVED',
       isPublic: true,
-      category: { isPublic: true },
+      category: { isPublic: true, status: 'APPROVED' },
     },
     select: { categoryId: true },
   });
@@ -198,8 +220,8 @@ export const getRelatedImages = async (id, limit = 12) => {
       categoryId: image.categoryId,
       status: 'APPROVED',
       isPublic: true,
-      id: { not: id }, // Exclude the current image
-      category: { isPublic: true },
+      id: { not: id },
+      category: { isPublic: true, status: 'APPROVED' },
     },
     include: {
       category: {

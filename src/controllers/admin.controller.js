@@ -27,6 +27,20 @@ export const toggleTrustedUser = async (req, res) => {
   );
 };
 
+/**
+ * Toggle category-trusted privilege for a user.
+ */
+export const toggleCategoryTrustedUser = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const user = await adminService.toggleCategoryTrustedUser(id);
+  const status = user.isCategoryTrusted ? 'CẤP PHÉP' : 'THU HỒI';
+  return sendSuccess(
+    res,
+    `Đã ${status} quyền tạo danh mục không cần duyệt cho ${user.name}`,
+    user
+  );
+};
+
 // === Category Management ===
 
 /**
@@ -48,8 +62,10 @@ export const createCategory = async (req, res) => {
     isPublic,
     userId: req.user.id,
     file: req.file,
+    role: req.user.role,
+    isCategoryTrusted: true, // Admin always auto-approved
   });
-  return sendSuccess(res, 'Tạo danh mục thành công', category, 201);
+  return sendSuccess(res, 'Tạo danh mục thành công (Đã được duyệt)', category, 201);
 };
 
 /**
@@ -84,6 +100,25 @@ export const toggleCategoryPublic = async (req, res) => {
     `Đã thay đổi trạng thái danh mục sang ${category.isPublic ? 'CÔNG KHAI' : 'RIÊNG TƯ'}`,
     category
   );
+};
+
+/**
+ * Admin approves a pending category.
+ */
+export const approveCategory = async (req, res) => {
+  const { id } = req.params;
+  const category = await adminService.approveCategory(parseInt(id, 10));
+  return sendSuccess(res, 'Duyệt danh mục thành công', category);
+};
+
+/**
+ * Admin rejects a category with a reason.
+ */
+export const rejectCategory = async (req, res) => {
+  const { id } = req.params;
+  const { rejectReason } = req.body;
+  const category = await adminService.rejectCategory(parseInt(id, 10), rejectReason);
+  return sendSuccess(res, 'Từ chối duyệt danh mục thành công', category);
 };
 
 // === Image Management ===

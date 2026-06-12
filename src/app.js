@@ -12,6 +12,8 @@ import publicRoutes from './routes/public.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import imageRoutes from './routes/image.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import userRoutes from './routes/user.routes.js';
+import commentRoutes from './routes/comment.routes.js';
 
 // Middlewares
 import errorMiddleware from './middlewares/error.middleware.js';
@@ -33,6 +35,8 @@ app.use('/api/public', publicRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api', commentRoutes); // Các route comments đã có prefix /images/:id/comments hoặc /comments/:id
 
 // Fallback Route Handler
 app.use((req, res) => {

@@ -38,6 +38,7 @@ export const getPublicImages = async (req, res) => {
     page,
     limit,
     search,
+    currentUserId: req.user?.id,
   });
   return sendSuccess(res, 'Lấy danh sách ảnh thành công', data);
 };

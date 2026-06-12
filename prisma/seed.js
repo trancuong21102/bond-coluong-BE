@@ -78,6 +78,7 @@ async function main() {
       slug: 'thien-nhien',
       description: 'Hình ảnh phong cảnh thiên nhiên, núi non hoang dã',
       isPublic: true,
+      status: 'APPROVED',
       createdById: admin.id,
     },
   });
@@ -91,6 +92,7 @@ async function main() {
       slug: 'thu-cung',
       description: 'Những con thú cưng dễ thương như chó, mèo, thỏ',
       isPublic: true,
+      status: 'APPROVED',
       createdById: user1.id,
     },
   });
@@ -104,6 +106,7 @@ async function main() {
       slug: 'cong-nghe',
       description: 'Thiết bị công nghệ và setup góc làm việc',
       isPublic: false,
+      status: 'APPROVED',
       createdById: admin.id,
     },
   });

@@ -12,6 +12,7 @@ export const getAllUsers = async () => {
       role: true,
       avatar: true,
       isTrusted: true,
+      isCategoryTrusted: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -24,9 +25,7 @@ export const getAllUsers = async () => {
  * When isTrusted = true, user's uploads are auto-approved without admin review.
  */
 export const toggleTrustedUser = async (id) => {
-  const user = await prisma.user.findUnique({
-    where: { id },
-  });
+  const user = await prisma.user.findUnique({ where: { id } });
 
   if (!user) {
     const error = new Error('Người dùng không tồn tại');
@@ -44,14 +43,39 @@ export const toggleTrustedUser = async (id) => {
     where: { id },
     data: { isTrusted: !user.isTrusted },
     select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      isTrusted: true,
-      avatar: true,
-      createdAt: true,
-      updatedAt: true,
+      id: true, name: true, email: true, role: true,
+      isTrusted: true, isCategoryTrusted: true, avatar: true,
+      createdAt: true, updatedAt: true,
+    },
+  });
+};
+
+/**
+ * Toggle category-trusted privilege for a user.
+ * When isCategoryTrusted = true, user’s categories are auto-approved without admin review.
+ */
+export const toggleCategoryTrustedUser = async (id) => {
+  const user = await prisma.user.findUnique({ where: { id } });
+
+  if (!user) {
+    const error = new Error('Người dùng không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (user.role === 'ADMIN') {
+    const error = new Error('Không thể thay đổi quyền của tài khoản Admin');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return await prisma.user.update({
+    where: { id },
+    data: { isCategoryTrusted: !user.isCategoryTrusted },
+    select: {
+      id: true, name: true, email: true, role: true,
+      isTrusted: true, isCategoryTrusted: true, avatar: true,
+      createdAt: true, updatedAt: true,
     },
   });
 };
@@ -96,6 +120,42 @@ export const toggleCategoryPublic = async (id) => {
     data: {
       isPublic: !category.isPublic,
     },
+  });
+};
+
+/**
+ * Approve a pending category. Status becomes APPROVED.
+ */
+export const approveCategory = async (id) => {
+  const category = await prisma.category.findUnique({ where: { id } });
+
+  if (!category) {
+    const error = new Error('Danh mục không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.category.update({
+    where: { id },
+    data: { status: 'APPROVED', rejectReason: null },
+  });
+};
+
+/**
+ * Reject a pending category. Status becomes REJECTED, rejectReason stored.
+ */
+export const rejectCategory = async (id, rejectReason) => {
+  const category = await prisma.category.findUnique({ where: { id } });
+
+  if (!category) {
+    const error = new Error('Danh mục không tồn tại');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return await prisma.category.update({
+    where: { id },
+    data: { status: 'REJECTED', rejectReason },
   });
 };
 

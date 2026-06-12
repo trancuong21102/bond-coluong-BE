@@ -16,7 +16,7 @@ export const getMyCategories = async (userId) => {
 /**
  * Create a new category and automatically generate its unique slug.
  */
-export const createCategory = async ({ name, description, isPublic, userId, file }) => {
+export const createCategory = async ({ name, description, isPublic, userId, file, role, isCategoryTrusted }) => {
   let slug = slugify(name);
 
   // Resolve slug collision
@@ -38,6 +38,9 @@ export const createCategory = async ({ name, description, isPublic, userId, file
     }
   }
 
+  // Admin → APPROVED; Category-trusted user → APPROVED; Regular user → PENDING
+  const status = role === 'ADMIN' || isCategoryTrusted ? 'APPROVED' : 'PENDING';
+
   return await prisma.category.create({
     data: {
       name,
@@ -45,6 +48,7 @@ export const createCategory = async ({ name, description, isPublic, userId, file
       description,
       isPublic,
       coverImage,
+      status,
       createdById: userId,
     },
   });

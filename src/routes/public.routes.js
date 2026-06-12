@@ -4,6 +4,7 @@ import validate from '../middlewares/validate.middleware.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { getCategoryBySlugSchema } from '../validations/category.validation.js';
 import { publicImagesQuerySchema, deleteImageSchema } from '../validations/image.validation.js';
+import optionalAuthMiddleware from '../middlewares/optionalAuth.middleware.js';
 
 const router = Router();
 
@@ -13,8 +14,8 @@ router.get('/categories/:slug', validate(getCategoryBySlugSchema), asyncHandler(
 router.get('/categories/:slug/images', validate(getCategoryBySlugSchema), asyncHandler(publicController.getPublicCategoryImages));
 
 // Image public routes
-router.get('/images', validate(publicImagesQuerySchema), asyncHandler(publicController.getPublicImages));
-router.get('/images/:id', validate(deleteImageSchema), asyncHandler(publicController.getPublicImageById));
+router.get('/images', optionalAuthMiddleware, validate(publicImagesQuerySchema), asyncHandler(publicController.getPublicImages));
+router.get('/images/:id', optionalAuthMiddleware, validate(deleteImageSchema), asyncHandler(publicController.getPublicImageById));
 router.get('/images/:id/related', validate(deleteImageSchema), asyncHandler(publicController.getRelatedImages));
 
 export default router;
