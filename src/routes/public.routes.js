@@ -9,9 +9,9 @@ import optionalAuthMiddleware from '../middlewares/optionalAuth.middleware.js';
 const router = Router();
 
 // Category public routes
-router.get('/categories', asyncHandler(publicController.getPublicCategories));
-router.get('/categories/:slug', validate(getCategoryBySlugSchema), asyncHandler(publicController.getPublicCategoryBySlug));
-router.get('/categories/:slug/images', validate(getCategoryBySlugSchema), asyncHandler(publicController.getPublicCategoryImages));
+router.get('/categories', optionalAuthMiddleware, asyncHandler(publicController.getPublicCategories));
+router.get('/categories/:slug', optionalAuthMiddleware, validate(getCategoryBySlugSchema), asyncHandler(publicController.getPublicCategoryBySlug));
+router.get('/categories/:slug/images', optionalAuthMiddleware, validate(getCategoryBySlugSchema), asyncHandler(publicController.getPublicCategoryImages));
 
 // Image public routes
 router.get('/images', optionalAuthMiddleware, validate(publicImagesQuerySchema), asyncHandler(publicController.getPublicImages));

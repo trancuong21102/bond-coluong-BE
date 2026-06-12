@@ -14,8 +14,15 @@ export const getPublicCategories = async (req, res) => {
  */
 export const getPublicCategoryBySlug = async (req, res) => {
   const { slug } = req.params;
-  const category = await publicService.getPublicCategoryBySlug(slug);
-  return sendSuccess(res, 'Lấy thông tin danh mục thành công', category);
+  try {
+    const category = await publicService.getPublicCategoryBySlug(slug, req.user?.id);
+    return sendSuccess(res, 'Lấy thông tin danh mục thành công', category);
+  } catch (error) {
+    if (error.isLocked) {
+      return res.status(403).json({ success: false, message: error.message, isLocked: true });
+    }
+    throw error;
+  }
 };
 
 /**
@@ -23,8 +30,15 @@ export const getPublicCategoryBySlug = async (req, res) => {
  */
 export const getPublicCategoryImages = async (req, res) => {
   const { slug } = req.params;
-  const images = await publicService.getPublicCategoryImages(slug);
-  return sendSuccess(res, 'Lấy danh sách ảnh thuộc danh mục thành công', images);
+  try {
+    const images = await publicService.getPublicCategoryImages(slug, req.user?.id);
+    return sendSuccess(res, 'Lấy danh sách ảnh thuộc danh mục thành công', images);
+  } catch (error) {
+    if (error.isLocked) {
+      return res.status(403).json({ success: false, message: error.message, isLocked: true });
+    }
+    throw error;
+  }
 };
 
 /**

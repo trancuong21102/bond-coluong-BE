@@ -10,6 +10,7 @@ dotenv.config();
 import authRoutes from './routes/auth.routes.js';
 import publicRoutes from './routes/public.routes.js';
 import categoryRoutes from './routes/category.routes.js';
+import accessRoutes from './routes/access.routes.js';
 import imageRoutes from './routes/image.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import userRoutes from './routes/user.routes.js';
@@ -33,6 +34,7 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/categories', accessRoutes); // Mount accessRoutes under categories
 app.use('/api/images', imageRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);

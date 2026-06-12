@@ -18,12 +18,22 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"User Test\",\n  \"email\": \"user@example.com\",\n  \"password\": \"User@123\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           },
           "response": []
@@ -36,12 +46,22 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"User@123\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -54,12 +74,22 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin@123\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -67,13 +97,28 @@
         {
           "name": "Get Profile (Me)",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/auth/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
             }
           },
           "response": []
@@ -81,21 +126,51 @@
         {
           "name": "Update Profile",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "avatar", "type": "file", "src": [], "description": "File ảnh đại diện (jpg, jpeg, png, webp) - tuỳ chọn" },
-                { "key": "name", "value": "Tên mới của tôi", "type": "text", "description": "Tên hiển thị - tuỳ chọn" },
-                { "key": "bio", "value": "Giới thiệu bản thân ngắn gọn", "type": "text", "description": "Tiểu sử - tuỳ chọn" }
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": [],
+                  "description": "File ảnh đại diện (jpg, jpeg, png, webp) - tuỳ chọn"
+                },
+                {
+                  "key": "name",
+                  "value": "Tên mới của tôi",
+                  "type": "text",
+                  "description": "Tên hiển thị - tuỳ chọn"
+                },
+                {
+                  "key": "bio",
+                  "value": "Giới thiệu bản thân ngắn gọn",
+                  "type": "text",
+                  "description": "Tiểu sử - tuỳ chọn"
+                }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "profile"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -103,18 +178,37 @@
         {
           "name": "Change Password",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"currentPassword\": \"User@123\",\n  \"newPassword\": \"NewPass@456\",\n  \"confirmPassword\": \"NewPass@456\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/change-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "change-password"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ]
             }
           },
           "response": []
@@ -132,8 +226,14 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "public", "categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -145,8 +245,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/categories/thien-nhien",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "public", "categories", "thien-nhien"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "categories",
+                "thien-nhien"
+              ]
             }
           },
           "response": []
@@ -158,8 +265,16 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/categories/thien-nhien/images",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "public", "categories", "thien-nhien", "images"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "categories",
+                "thien-nhien",
+                "images"
+              ]
             }
           },
           "response": []
@@ -171,14 +286,38 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/images?page=1&limit=10&search=nui",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "public", "images"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "images"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" },
-                { "key": "search", "value": "nui", "description": "Từ khóa tìm kiếm theo title hoặc description" },
-                { "key": "categoryId", "value": "1", "disabled": true },
-                { "key": "categorySlug", "value": "thien-nhien", "disabled": true }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "nui",
+                  "description": "Từ khóa tìm kiếm theo title hoặc description"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "categorySlug",
+                  "value": "thien-nhien",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -191,8 +330,15 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/images/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "public", "images", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "images",
+                "1"
+              ]
             }
           },
           "response": []
@@ -204,8 +350,16 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/public/images/1/related",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "public", "images", "1", "related"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "public",
+                "images",
+                "1",
+                "related"
+              ]
             }
           },
           "response": []
@@ -219,13 +373,28 @@
         {
           "name": "Get My Categories",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/categories/my",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "categories", "my"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "my"
+              ]
             }
           },
           "response": []
@@ -233,22 +402,53 @@
         {
           "name": "Create Category (Chờ duyệt nếu không phải Trusted)",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "coverImage", "type": "file", "src": [], "description": "File ảnh bìa (jpg, jpeg, png, webp)" },
-                { "key": "name", "value": "Thiên nhiên", "type": "text" },
-                { "key": "description", "value": "Ảnh về danh mục phong cảnh thiên nhiên", "type": "text" },
-                { "key": "isPublic", "value": "true", "type": "text" }
+                {
+                  "key": "coverImage",
+                  "type": "file",
+                  "src": [],
+                  "description": "File ảnh bìa (jpg, jpeg, png, webp)"
+                },
+                {
+                  "key": "name",
+                  "value": "Thiên nhiên",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Ảnh về danh mục phong cảnh thiên nhiên",
+                  "type": "text"
+                },
+                {
+                  "key": "isPublic",
+                  "value": "true",
+                  "type": "text"
+                }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "categories"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories"
+              ]
             }
           },
           "response": []
@@ -256,22 +456,54 @@
         {
           "name": "Update My Category",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "coverImage", "type": "file", "src": [], "description": "File ảnh bìa (jpg, jpeg, png, webp)" },
-                { "key": "name", "value": "Thiên nhiên núi rừng", "type": "text" },
-                { "key": "description", "value": "Cập nhật ảnh về núi rừng", "type": "text" },
-                { "key": "isPublic", "value": "true", "type": "text" }
+                {
+                  "key": "coverImage",
+                  "type": "file",
+                  "src": [],
+                  "description": "File ảnh bìa (jpg, jpeg, png, webp)"
+                },
+                {
+                  "key": "name",
+                  "value": "Thiên nhiên núi rừng",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Cập nhật ảnh về núi rừng",
+                  "type": "text"
+                },
+                {
+                  "key": "isPublic",
+                  "value": "true",
+                  "type": "text"
+                }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/categories/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "categories", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "1"
+              ]
             }
           },
           "response": []
@@ -279,13 +511,28 @@
         {
           "name": "Delete My Category",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/categories/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "categories", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "1"
+              ]
             }
           },
           "response": []
@@ -299,13 +546,28 @@
         {
           "name": "Get My Images",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/my",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "my"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "my"
+              ]
             }
           },
           "response": []
@@ -313,23 +575,58 @@
         {
           "name": "Upload Image (Chờ duyệt nếu không phải Trusted)",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "image", "type": "file", "src": [], "description": "File ảnh (jpg, jpeg, png, webp) giới hạn 5MB" },
-                { "key": "title", "value": "Ảnh núi tuyết", "type": "text" },
-                { "key": "description", "value": "Một bức ảnh tuyệt đẹp về núi tuyết", "type": "text" },
-                { "key": "categoryId", "value": "1", "type": "text" },
-                { "key": "isPublic", "value": "true", "type": "text" }
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "File ảnh (jpg, jpeg, png, webp) giới hạn 5MB"
+                },
+                {
+                  "key": "title",
+                  "value": "Ảnh núi tuyết",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Một bức ảnh tuyệt đẹp về núi tuyết",
+                  "type": "text"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "isPublic",
+                  "value": "true",
+                  "type": "text"
+                }
               ]
             },
             "url": {
               "raw": "{{baseUrl}}/api/images",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images"
+              ]
             }
           },
           "response": []
@@ -337,13 +634,28 @@
         {
           "name": "Delete My Image",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "1"
+              ]
             }
           },
           "response": []
@@ -357,16 +669,37 @@
         {
           "name": "Get My Saved Images",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/saved?page=1&limit=12",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "saved"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "saved"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "12" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "12"
+                }
               ]
             }
           },
@@ -375,13 +708,29 @@
         {
           "name": "Get My Saved Image IDs",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/saved/ids",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "saved", "ids"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "saved",
+                "ids"
+              ]
             }
           },
           "response": []
@@ -389,13 +738,29 @@
         {
           "name": "Save Image",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/1/save",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "1", "save"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "1",
+                "save"
+              ]
             }
           },
           "response": []
@@ -403,120 +768,29 @@
         {
           "name": "Unsave Image",
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/images/1/save",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "1", "save"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "7. Follow & Comments",
-      "description": "API theo dõi người dùng và bình luận vào ảnh.",
-      "item": [
-        {
-          "name": "Follow User",
-          "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/users/2/follow",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "users", "2", "follow"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Unfollow User",
-          "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/users/2/follow",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "users", "2", "follow"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Follow Status",
-          "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/users/2/follow-status",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "users", "2", "follow-status"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get User Profile",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/users/2",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "users", "2"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Image Comments",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/images/1/comments",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "1", "comments"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Comment",
-          "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"content\": \"Bức ảnh này rất đẹp!\"\n}",
-              "options": { "raw": { "language": "json" } }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/images/1/comments",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "images", "1", "comments"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Comment",
-          "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/comments/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "comments", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "1",
+                "save"
+              ]
             }
           },
           "response": []
@@ -533,13 +807,28 @@
             {
               "name": "Get All Users",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/users",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "users"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users"
+                  ]
                 }
               },
               "response": []
@@ -547,13 +836,30 @@
             {
               "name": "Toggle Trusted Image (Cấp/Thu hồi quyền đăng ảnh không duyệt)",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/users/1/toggle-trusted",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "users", "1", "toggle-trusted"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "toggle-trusted"
+                  ]
                 }
               },
               "response": []
@@ -561,13 +867,30 @@
             {
               "name": "Toggle Trusted Category (Cấp/Thu hồi quyền tạo danh mục không duyệt)",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/users/1/toggle-category-trusted",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "users", "1", "toggle-category-trusted"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "users",
+                    "1",
+                    "toggle-category-trusted"
+                  ]
                 }
               },
               "response": []
@@ -580,13 +903,28 @@
             {
               "name": "Admin Get All Categories",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories"
+                  ]
                 }
               },
               "response": []
@@ -594,22 +932,54 @@
             {
               "name": "Admin Create Category (Auto Approved)",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "coverImage", "type": "file", "src": [], "description": "File ảnh bìa (jpg, jpeg, png, webp)" },
-                    { "key": "name", "value": "Admin Category", "type": "text" },
-                    { "key": "description", "value": "Tạo bởi Admin", "type": "text" },
-                    { "key": "isPublic", "value": "true", "type": "text" }
+                    {
+                      "key": "coverImage",
+                      "type": "file",
+                      "src": [],
+                      "description": "File ảnh bìa (jpg, jpeg, png, webp)"
+                    },
+                    {
+                      "key": "name",
+                      "value": "Admin Category",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Tạo bởi Admin",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isPublic",
+                      "value": "true",
+                      "type": "text"
+                    }
                   ]
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories"
+                  ]
                 }
               },
               "response": []
@@ -617,22 +987,55 @@
             {
               "name": "Admin Update Category",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PUT",
                 "header": [],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "coverImage", "type": "file", "src": [], "description": "File ảnh bìa (jpg, jpeg, png, webp)" },
-                    { "key": "name", "value": "Admin Category Updated", "type": "text" },
-                    { "key": "description", "value": "Cập nhật bởi Admin", "type": "text" },
-                    { "key": "isPublic", "value": "false", "type": "text" }
+                    {
+                      "key": "coverImage",
+                      "type": "file",
+                      "src": [],
+                      "description": "File ảnh bìa (jpg, jpeg, png, webp)"
+                    },
+                    {
+                      "key": "name",
+                      "value": "Admin Category Updated",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Cập nhật bởi Admin",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isPublic",
+                      "value": "false",
+                      "type": "text"
+                    }
                   ]
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories/1",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories", "1"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories",
+                    "1"
+                  ]
                 }
               },
               "response": []
@@ -640,13 +1043,30 @@
             {
               "name": "Admin Approve Category",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories/1/approve",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories", "1", "approve"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories",
+                    "1",
+                    "approve"
+                  ]
                 }
               },
               "response": []
@@ -654,18 +1074,39 @@
             {
               "name": "Admin Reject Category",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"rejectReason\": \"Tên danh mục không phù hợp với tiêu chí của hệ thống\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories/1/reject",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories", "1", "reject"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories",
+                    "1",
+                    "reject"
+                  ]
                 }
               },
               "response": []
@@ -673,13 +1114,30 @@
             {
               "name": "Admin Toggle Category Public",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories/1/toggle-public",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories", "1", "toggle-public"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories",
+                    "1",
+                    "toggle-public"
+                  ]
                 }
               },
               "response": []
@@ -687,13 +1145,29 @@
             {
               "name": "Admin Delete Category",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "DELETE",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/categories/1",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "categories", "1"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "categories",
+                    "1"
+                  ]
                 }
               },
               "response": []
@@ -706,20 +1180,57 @@
             {
               "name": "Admin Get All Images (Filters & Search)",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "GET",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/images?status=PENDING&page=1&limit=10",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "images"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "images"
+                  ],
                   "query": [
-                    { "key": "status", "value": "PENDING", "description": "PENDING | APPROVED | REJECTED" },
-                    { "key": "categoryId", "value": "1", "disabled": true },
-                    { "key": "uploadedById", "value": "2", "disabled": true },
-                    { "key": "page", "value": "1" },
-                    { "key": "limit", "value": "10" },
-                    { "key": "search", "value": "nui", "disabled": true }
+                    {
+                      "key": "status",
+                      "value": "PENDING",
+                      "description": "PENDING | APPROVED | REJECTED"
+                    },
+                    {
+                      "key": "categoryId",
+                      "value": "1",
+                      "disabled": true
+                    },
+                    {
+                      "key": "uploadedById",
+                      "value": "2",
+                      "disabled": true
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "nui",
+                      "disabled": true
+                    }
                   ]
                 }
               },
@@ -728,23 +1239,59 @@
             {
               "name": "Admin Upload Image (Auto Approved)",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "image", "type": "file", "src": [], "description": "File ảnh (jpg, jpeg, png, webp)" },
-                    { "key": "title", "value": "Ảnh admin đăng trực tiếp", "type": "text" },
-                    { "key": "description", "value": "Ảnh được đăng tải bởi tài khoản admin", "type": "text" },
-                    { "key": "categoryId", "value": "1", "type": "text" },
-                    { "key": "isPublic", "value": "true", "type": "text" }
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": [],
+                      "description": "File ảnh (jpg, jpeg, png, webp)"
+                    },
+                    {
+                      "key": "title",
+                      "value": "Ảnh admin đăng trực tiếp",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Ảnh được đăng tải bởi tài khoản admin",
+                      "type": "text"
+                    },
+                    {
+                      "key": "categoryId",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isPublic",
+                      "value": "true",
+                      "type": "text"
+                    }
                   ]
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/images",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "images"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "images"
+                  ]
                 }
               },
               "response": []
@@ -752,13 +1299,30 @@
             {
               "name": "Admin Approve Image",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/images/1/approve",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "images", "1", "approve"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "images",
+                    "1",
+                    "approve"
+                  ]
                 }
               },
               "response": []
@@ -766,18 +1330,39 @@
             {
               "name": "Admin Reject Image",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"rejectReason\": \"Ảnh không rõ nét hoặc không đúng chủ đề danh mục\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/images/1/reject",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "images", "1", "reject"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "images",
+                    "1",
+                    "reject"
+                  ]
                 }
               },
               "response": []
@@ -785,13 +1370,30 @@
             {
               "name": "Admin Toggle Image Public",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "PATCH",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/images/1/toggle-public",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "images", "1", "toggle-public"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "images",
+                    "1",
+                    "toggle-public"
+                  ]
                 }
               },
               "response": []
@@ -799,18 +1401,237 @@
             {
               "name": "Admin Delete Image",
               "request": {
-                "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "method": "DELETE",
                 "header": [],
                 "url": {
                   "raw": "{{baseUrl}}/api/admin/images/1",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["api", "admin", "images", "1"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "admin",
+                    "images",
+                    "1"
+                  ]
                 }
               },
               "response": []
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "7. Follow & Comments",
+      "description": "API theo dõi người dùng và bình luận vào ảnh.",
+      "item": [
+        {
+          "name": "Follow User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2/follow",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "2",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2/follow",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "2",
+                "follow"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Follow Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2/follow-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "2",
+                "follow-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Image Comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/images/1/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Bức ảnh này rất đẹp!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/images/1/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "images",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/comments/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "comments",
+                "1"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }

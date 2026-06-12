@@ -25,41 +25,51 @@ enum CategoryStatus {
   REJECTED
 }
 
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id                  Int        @id @default(autoincrement())
-  name                String
-  email               String     @unique
-  password            String
-  role                Role       @default(USER)
-  avatar              String?
-  isTrusted           Boolean    @default(false)
-  isCategoryTrusted   Boolean    @default(false)
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-  categories          Category[]
-  images              Image[]
-  savedImages         Image[]    @relation("UserSavedImages")
-  followers           Follows[]  @relation("following")
-  following           Follows[]  @relation("follower")
-  comments            Comment[]
+  id                Int              @id @default(autoincrement())
+  name              String
+  email             String           @unique
+  password          String
+  role              Role             @default(USER)
+  avatar            String?
+  isTrusted         Boolean          @default(false)
+  isCategoryTrusted Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  categories        Category[]
+  images            Image[]
+  savedImages       Image[]          @relation("UserSavedImages")
+  followers         Follows[]        @relation("following")
+  following         Follows[]        @relation("follower")
+  comments          Comment[]
+  categoryAccess    CategoryAccess[]
+  accessRequests    AccessRequest[]
 
   @@map("users")
 }
 
 model Category {
-  id            Int            @id @default(autoincrement())
-  name          String
-  slug          String         @unique
-  description   String?        @db.Text
-  coverImage    String?
-  isPublic      Boolean        @default(true)
-  status        CategoryStatus @default(PENDING)
-  rejectReason  String?        @db.Text
-  createdById   Int
-  createdBy     User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  images        Image[]
+  id             Int              @id @default(autoincrement())
+  name           String
+  slug           String           @unique
+  description    String?          @db.Text
+  coverImage     String?
+  isPublic       Boolean          @default(true)
+  status         CategoryStatus   @default(PENDING)
+  rejectReason   String?          @db.Text
+  createdById    Int
+  createdBy      User             @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  images         Image[]
+  accessList     CategoryAccess[]
+  accessRequests AccessRequest[]
 
   @@map("categories")
 }
@@ -106,4 +116,29 @@ model Comment {
   updatedAt DateTime @updatedAt
 
   @@map("comments")
+}
+
+model CategoryAccess {
+  categoryId Int
+  userId     Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([categoryId, userId])
+  @@map("category_access")
+}
+
+model AccessRequest {
+  id          Int           @id @default(autoincrement())
+  categoryId  Int
+  requesterId Int
+  status      RequestStatus @default(PENDING)
+  token       String        @unique
+  category    Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  requester   User          @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("access_requests")
 }

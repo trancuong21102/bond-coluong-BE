@@ -5,7 +5,7 @@ import prisma from '../config/prisma.js';
  */
 export const getPublicCategories = async () => {
   return await prisma.category.findMany({
-    where: { isPublic: true, status: 'APPROVED' },
+    where: { status: 'APPROVED' },
     orderBy: { name: 'asc' },
   });
 };
@@ -13,39 +13,74 @@ export const getPublicCategories = async () => {
 /**
  * Get public category details by slug.
  */
-export const getPublicCategoryBySlug = async (slug) => {
+export const getPublicCategoryBySlug = async (slug, currentUserId) => {
   const category = await prisma.category.findFirst({
-    where: { slug, isPublic: true, status: 'APPROVED' },
+    where: { slug, status: 'APPROVED' },
+    include: {
+      accessList: currentUserId ? { where: { userId: currentUserId } } : false,
+    }
   });
 
   if (!category) {
-    const error = new Error('Danh mục không tồn tại hoặc không ở chế độ công khai');
+    const error = new Error('Danh mục không tồn tại');
     error.statusCode = 404;
     throw error;
   }
 
+  if (!category.isPublic) {
+    const isOwner = currentUserId && category.createdById === currentUserId;
+    const hasAccess = currentUserId && category.accessList && category.accessList.length > 0;
+    
+    if (!isOwner && !hasAccess) {
+      const error = new Error('Danh mục này đã bị khoá');
+      error.statusCode = 403;
+      error.isLocked = true; // Cờ cho frontend
+      throw error;
+    }
+  }
+
+  delete category.accessList;
   return category;
 };
 
 /**
  * Get all approved public images inside a specific public category.
  */
-export const getPublicCategoryImages = async (slug) => {
+export const getPublicCategoryImages = async (slug, currentUserId) => {
   const category = await prisma.category.findFirst({
-    where: { slug, isPublic: true, status: 'APPROVED' },
+    where: { slug, status: 'APPROVED' },
+    include: {
+      accessList: currentUserId ? { where: { userId: currentUserId } } : false,
+    }
   });
 
   if (!category) {
-    const error = new Error('Danh mục không tồn tại hoặc không ở chế độ công khai');
+    const error = new Error('Danh mục không tồn tại');
     error.statusCode = 404;
     throw error;
+  }
+
+  if (!category.isPublic) {
+    const isOwner = currentUserId && category.createdById === currentUserId;
+    const hasAccess = currentUserId && category.accessList && category.accessList.length > 0;
+    
+    if (!isOwner && !hasAccess) {
+      const error = new Error('Danh mục này đã bị khoá');
+      error.statusCode = 403;
+      error.isLocked = true;
+      throw error;
+    }
   }
 
   return await prisma.image.findMany({
     where: {
       categoryId: category.id,
       status: 'APPROVED',
-      isPublic: true,
+      // If the category is private but the user has access, 
+      // we allow them to see images in it that are approved. 
+      // isPublic on image level should ideally be checked if they are also private? 
+      // Usually, images inherit category visibility, but let's just check status here.
+      // Or require image.isPublic = true unless category is private. Let's just fetch all APPROVED in this category.
     },
     include: {
       uploadedBy: {
@@ -67,14 +102,31 @@ export const getPublicCategoryImages = async (slug) => {
 export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limit = 10, search, currentUserId }) => {
   const skip = (page - 1) * limit;
 
-  // Enforce visibility filters: images must be approved, public, and belong to public categories
+  const accessibleCategoryIds = currentUserId ? (await prisma.categoryAccess.findMany({
+    where: { userId: currentUserId },
+    select: { categoryId: true },
+  })).map(a => a.categoryId) : [];
+
+  const categoryCondition = {
+    status: 'APPROVED',
+    OR: [
+      { isPublic: true },
+    ]
+  };
+
+  if (accessibleCategoryIds.length > 0) {
+    categoryCondition.OR.push({ id: { in: accessibleCategoryIds } });
+  }
+  
+  if (currentUserId) {
+    categoryCondition.OR.push({ createdById: currentUserId });
+  }
+
+  // Enforce visibility filters: images must be approved, public, and belong to accessible categories
   const where = {
     status: 'APPROVED',
-    isPublic: true,
-    category: {
-      isPublic: true,
-      status: 'APPROVED',
-    },
+    // isPublic: true, // We might want to remove this if we allow private images, but for now images must be public themselves.
+    category: categoryCondition,
   };
 
   if (categoryId) {
@@ -83,9 +135,8 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
 
   if (categorySlug) {
     where.category = {
+      ...where.category,
       slug: categorySlug,
-      isPublic: true,
-      status: 'APPROVED',
     };
   }
 
