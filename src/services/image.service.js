@@ -106,23 +106,36 @@ export const deleteImage = async (id, userId, isAdmin = false) => {
   return image;
 };
 
-/**
- * Save/bookmark an image for a user.
- */
 export const saveImage = async (imageId, userId) => {
   const image = await prisma.image.findFirst({
     where: {
       id: imageId,
       status: 'APPROVED',
-      isPublic: true,
-      category: { isPublic: true },
     },
+    include: {
+      category: {
+        include: {
+          accessList: { where: { userId } }
+        }
+      }
+    }
   });
 
   if (!image) {
-    const error = new Error('Hình ảnh không tồn tại hoặc không ở chế độ công khai');
+    const error = new Error('Hình ảnh không tồn tại hoặc chưa được duyệt');
     error.statusCode = 404;
     throw error;
+  }
+
+  // Kiểm tra quyền nếu danh mục khoá
+  if (!image.category.isPublic) {
+    const isOwner = image.category.createdById === userId;
+    const hasAccess = image.category.accessList && image.category.accessList.length > 0;
+    if (!isOwner && !hasAccess) {
+      const error = new Error('Bạn không có quyền lưu hình ảnh trong danh mục này');
+      error.statusCode = 403;
+      throw error;
+    }
   }
 
   // Update user to connect this image
@@ -159,18 +172,28 @@ export const unsaveImage = async (imageId, userId) => {
   });
 };
 
-/**
- * Get all images saved by a specific user.
- */
 export const getSavedImages = async (userId) => {
+  const accessibleCategoryIds = (await prisma.categoryAccess.findMany({
+    where: { userId },
+    select: { categoryId: true },
+  })).map(a => a.categoryId);
+
+  const categoryCondition = {
+    status: 'APPROVED',
+    OR: [
+      { isPublic: true },
+      { id: { in: accessibleCategoryIds } },
+      { createdById: userId }
+    ]
+  };
+
   return await prisma.image.findMany({
     where: {
       savedBy: {
         some: { id: userId },
       },
       status: 'APPROVED',
-      isPublic: true,
-      category: { isPublic: true },
+      category: categoryCondition,
     },
     include: {
       category: {
@@ -196,14 +219,27 @@ export const getSavedImages = async (userId) => {
  * Get simple list of IDs of images saved by a specific user.
  */
 export const getSavedImageIds = async (userId) => {
+  const accessibleCategoryIds = (await prisma.categoryAccess.findMany({
+    where: { userId },
+    select: { categoryId: true },
+  })).map(a => a.categoryId);
+
+  const categoryCondition = {
+    status: 'APPROVED',
+    OR: [
+      { isPublic: true },
+      { id: { in: accessibleCategoryIds } },
+      { createdById: userId }
+    ]
+  };
+
   const images = await prisma.image.findMany({
     where: {
       savedBy: {
         some: { id: userId },
       },
       status: 'APPROVED',
-      isPublic: true,
-      category: { isPublic: true },
+      category: categoryCondition,
     },
     select: {
       id: true,
