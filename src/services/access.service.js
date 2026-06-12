@@ -48,7 +48,8 @@ export const requestAccess = async (categoryId, requesterId) => {
 
   if (existingRequest) {
     // Đã xin quyền rồi, cho phép gửi lại email
-    const backendUrl = process.env.API_URL || 'http://localhost:8386';
+    let backendUrl = process.env.API_URL || 'http://localhost:8386';
+    if (backendUrl.endsWith('/')) backendUrl = backendUrl.slice(0, -1);
     const approvalLink = `${backendUrl}/api/categories/approve-access?token=${existingRequest.token}`;
 
     await sendAccessRequestEmail({
@@ -78,7 +79,8 @@ export const requestAccess = async (categoryId, requesterId) => {
 
   // Construct approval link. Using frontend or backend URL.
   // Ideally, it goes to backend which redirects to a frontend success page.
-  const backendUrl = process.env.API_URL || 'http://localhost:8386';
+  let backendUrl = process.env.API_URL || 'http://localhost:8386';
+  if (backendUrl.endsWith('/')) backendUrl = backendUrl.slice(0, -1);
   const approvalLink = `${backendUrl}/api/categories/approve-access?token=${token}`;
 
   // Send email to the category owner
