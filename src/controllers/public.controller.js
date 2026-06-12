@@ -63,7 +63,7 @@ export const getPublicImages = async (req, res) => {
  */
 export const getPublicImageById = async (req, res) => {
   const { id } = req.params; // Has been parsed to number by Zod middleware
-  const image = await publicService.getPublicImageById(id);
+  const image = await publicService.getPublicImageById(id, req.user?.id);
   return sendSuccess(res, 'Lấy chi tiết hình ảnh thành công', image);
 };
 
@@ -73,6 +73,6 @@ export const getPublicImageById = async (req, res) => {
 export const getRelatedImages = async (req, res) => {
   const { id } = req.params;
   const limit = req.query.limit ? parseInt(req.query.limit, 10) : 12;
-  const images = await publicService.getRelatedImages(id, limit);
+  const images = await publicService.getRelatedImages(id, req.user?.id, limit);
   return sendSuccess(res, 'Lấy hình ảnh liên quan thành công', images);
 };

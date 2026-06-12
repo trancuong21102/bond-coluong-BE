@@ -206,24 +206,18 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
 /**
  * Get details of a single public image by ID.
  */
-export const getPublicImageById = async (id) => {
+export const getPublicImageById = async (id, currentUserId) => {
   const image = await prisma.image.findFirst({
     where: {
       id,
       status: 'APPROVED',
-      isPublic: true,
-      category: {
-        isPublic: true,
-        status: 'APPROVED',
-      },
+      // isPublic: true, // Ảnh trong danh mục khoá có thể ko bật isPublic, ta xét theo danh mục
     },
     include: {
       category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
+        include: {
+          accessList: currentUserId ? { where: { userId: currentUserId } } : false,
+        }
       },
       uploadedBy: {
         select: {
@@ -236,11 +230,24 @@ export const getPublicImageById = async (id) => {
   });
 
   if (!image) {
-    const error = new Error('Hình ảnh không tồn tại hoặc không ở chế độ công khai');
+    const error = new Error('Hình ảnh không tồn tại hoặc chưa được duyệt');
     error.statusCode = 404;
     throw error;
   }
 
+  // Kiểm tra quyền truy cập danh mục
+  if (!image.category.isPublic) {
+    const isOwner = currentUserId && image.category.createdById === currentUserId;
+    const hasAccess = currentUserId && image.category.accessList && image.category.accessList.length > 0;
+    
+    if (!isOwner && !hasAccess) {
+      const error = new Error('Hình ảnh thuộc danh mục đã bị khoá, bạn không có quyền xem');
+      error.statusCode = 403;
+      throw error;
+    }
+  }
+
+  delete image.category.accessList;
   return image;
 };
 
@@ -248,31 +255,45 @@ export const getPublicImageById = async (id) => {
  * Get related images for a given image.
  * Returns approved, public images from the same category, excluding the image itself.
  */
-export const getRelatedImages = async (id, limit = 12) => {
+export const getRelatedImages = async (id, currentUserId, limit = 12) => {
   // First, find the image to get its categoryId
   const image = await prisma.image.findFirst({
     where: {
       id,
       status: 'APPROVED',
-      isPublic: true,
-      category: { isPublic: true, status: 'APPROVED' },
     },
-    select: { categoryId: true },
+    include: {
+      category: {
+        include: {
+          accessList: currentUserId ? { where: { userId: currentUserId } } : false,
+        }
+      }
+    }
   });
 
   if (!image) {
-    const error = new Error('Hình ảnh không tồn tại hoặc không ở chế độ công khai');
+    const error = new Error('Hình ảnh không tồn tại');
     error.statusCode = 404;
     throw error;
+  }
+
+  // Kiểm tra quyền
+  if (!image.category.isPublic) {
+    const isOwner = currentUserId && image.category.createdById === currentUserId;
+    const hasAccess = currentUserId && image.category.accessList && image.category.accessList.length > 0;
+    
+    if (!isOwner && !hasAccess) {
+      const error = new Error('Bạn không có quyền xem ảnh liên quan trong danh mục này');
+      error.statusCode = 403;
+      throw error;
+    }
   }
 
   return await prisma.image.findMany({
     where: {
       categoryId: image.categoryId,
       status: 'APPROVED',
-      isPublic: true,
       id: { not: id },
-      category: { isPublic: true, status: 'APPROVED' },
     },
     include: {
       category: {
