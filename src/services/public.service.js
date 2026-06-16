@@ -150,33 +150,18 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     ];
   }
 
-  const totalItems = await prisma.image.count({ where });
-
-  let items = await prisma.image.findMany({
+  // Fetch all matching images (only id and uploadedById to classify them)
+  const allImages = await prisma.image.findMany({
     where,
-    include: {
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      uploadedBy: {
-        select: {
-          id: true,
-          name: true,
-          avatar: true,
-        },
-      },
+    select: {
+      id: true,
+      uploadedById: true,
     },
-    skip,
-    take: limit,
-    orderBy: { createdAt: 'desc' },
   });
 
-  // Nếu có currentUserId, kiểm tra xem user đang follow ai để ưu tiên sắp xếp (in-memory per page)
-  // Thực tế ở quy mô lớn cần dùng raw SQL ORDER BY CASE. Ở quy mô nhỏ/page size, ta sort tại memory.
+  let followedImages = [];
+  let otherImages = [];
+
   if (currentUserId) {
     const follows = await prisma.follows.findMany({
       where: { followerId: currentUserId },
@@ -184,15 +169,68 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     });
     const followingIds = follows.map(f => f.followingId);
 
-    if (followingIds.length > 0) {
-      items.sort((a, b) => {
-        const aFollowed = followingIds.includes(a.uploadedById) ? 1 : 0;
-        const bFollowed = followingIds.includes(b.uploadedById) ? 1 : 0;
-        if (aFollowed > bFollowed) return -1;
-        if (aFollowed < bFollowed) return 1;
-        return 0; // Giữ nguyên thứ tự createdAt desc
-      });
+    for (const img of allImages) {
+      if (followingIds.includes(img.uploadedById)) {
+        followedImages.push(img.id);
+      } else {
+        otherImages.push(img.id);
+      }
     }
+  } else {
+    otherImages = allImages.map(img => img.id);
+  }
+
+  // Shuffle both groups using a seed that changes every 30 minutes to ensure stable pagination
+  const seed = Math.floor(Date.now() / (1000 * 60 * 30));
+  const shuffle = (array, seedVal) => {
+    let m = array.length, t, i;
+    let rand = () => {
+      seedVal = (seedVal * 9301 + 49297) % 233280;
+      return seedVal / 233280;
+    };
+    while (m) {
+      i = Math.floor(rand() * m--);
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+    return array;
+  };
+
+  const shuffledFollowed = shuffle(followedImages, seed);
+  const shuffledOthers = shuffle(otherImages, seed + 1);
+
+  const combinedIds = [...shuffledFollowed, ...shuffledOthers];
+  const totalItems = combinedIds.length;
+  const paginatedIds = combinedIds.slice(skip, skip + limit);
+
+  let items = [];
+  if (paginatedIds.length > 0) {
+    const fetchedItems = await prisma.image.findMany({
+      where: {
+        id: { in: paginatedIds },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        uploadedBy: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+
+    // Map back to preserve the shuffled order
+    const itemMap = new Map(fetchedItems.map(item => [item.id, item]));
+    items = paginatedIds.map(id => itemMap.get(id)).filter(Boolean);
   }
 
   return {
