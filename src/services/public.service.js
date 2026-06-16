@@ -3,9 +3,12 @@ import prisma from '../config/prisma.js';
 /**
  * Get all public categories.
  */
-export const getPublicCategories = async () => {
+export const getPublicCategories = async (currentUserId) => {
   return await prisma.category.findMany({
     where: { status: 'APPROVED' },
+    include: {
+      accessList: currentUserId ? { where: { userId: currentUserId } } : false,
+    },
     orderBy: { name: 'asc' },
   });
 };

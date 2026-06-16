@@ -35,6 +35,9 @@ export const uploadImage = async ({ title, description, isPublic, categoryId, us
   // Verify category exists
   const category = await prisma.category.findUnique({
     where: { id: categoryId },
+    include: {
+      accessList: { where: { userId } }
+    }
   });
 
   if (!category) {
@@ -43,6 +46,18 @@ export const uploadImage = async ({ title, description, isPublic, categoryId, us
     const error = new Error('Danh mục không tồn tại');
     error.statusCode = 404;
     throw error;
+  }
+
+  // Check access if category is locked
+  if (!category.isPublic) {
+    const isOwner = category.createdById === userId || role === 'ADMIN';
+    const hasAccess = category.accessList && category.accessList.length > 0;
+    if (!isOwner && !hasAccess) {
+      await deleteFile(file.path);
+      const error = new Error('Bạn không có quyền đăng ảnh vào danh mục này');
+      error.statusCode = 403;
+      throw error;
+    }
   }
 
   let imageUrl = '';

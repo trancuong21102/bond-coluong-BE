@@ -5,7 +5,7 @@ import { sendSuccess } from '../utils/response.js';
  * Get public category list.
  */
 export const getPublicCategories = async (req, res) => {
-  const categories = await publicService.getPublicCategories();
+  const categories = await publicService.getPublicCategories(req.user?.id);
   return sendSuccess(res, 'Lấy danh sách danh mục thành công', categories);
 };
 
