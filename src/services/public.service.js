@@ -180,16 +180,11 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     otherImages = allImages.map(img => img.id);
   }
 
-  // Shuffle both groups using a seed that changes every 30 minutes to ensure stable pagination
-  const seed = Math.floor(Date.now() / (1000 * 60 * 30));
-  const shuffle = (array, seedVal) => {
+  // Shuffle both groups randomly on every API call
+  const shuffle = (array) => {
     let m = array.length, t, i;
-    let rand = () => {
-      seedVal = (seedVal * 9301 + 49297) % 233280;
-      return seedVal / 233280;
-    };
     while (m) {
-      i = Math.floor(rand() * m--);
+      i = Math.floor(Math.random() * m--);
       t = array[m];
       array[m] = array[i];
       array[i] = t;
@@ -197,8 +192,8 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
     return array;
   };
 
-  const shuffledFollowed = shuffle(followedImages, seed);
-  const shuffledOthers = shuffle(otherImages, seed + 1);
+  const shuffledFollowed = shuffle(followedImages);
+  const shuffledOthers = shuffle(otherImages);
 
   const combinedIds = [...shuffledFollowed, ...shuffledOthers];
   const totalItems = combinedIds.length;
