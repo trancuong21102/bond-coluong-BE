@@ -76,3 +76,12 @@ export const getRelatedImages = async (req, res) => {
   const images = await publicService.getRelatedImages(id, req.user?.id, limit);
   return sendSuccess(res, 'Lấy hình ảnh liên quan thành công', images);
 };
+
+/**
+ * Get search suggestions (categories, images, users) matching a query.
+ */
+export const getSearchSuggestions = async (req, res) => {
+  const { q } = req.query;
+  const suggestions = await publicService.getSearchSuggestions(q, req.user?.id);
+  return sendSuccess(res, 'Lấy gợi ý tìm kiếm thành công', suggestions);
+};

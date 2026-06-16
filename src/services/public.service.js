@@ -145,8 +145,9 @@ export const getPublicImages = async ({ categoryId, categorySlug, page = 1, limi
 
   if (search) {
     where.OR = [
-      { title: { contains: search } },
-      { description: { contains: search } },
+      { title: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+      { category: { name: { contains: search, mode: 'insensitive' } } },
     ];
   }
 
@@ -350,4 +351,66 @@ export const getRelatedImages = async (id, currentUserId, limit = 12) => {
     orderBy: { createdAt: 'desc' },
     take: limit,
   });
+};
+
+/**
+ * Get suggestions for search.
+ */
+export const getSearchSuggestions = async (q, currentUserId) => {
+  if (!q || q.trim() === '') {
+    return { categories: [], images: [], users: [] };
+  }
+
+  const query = q.trim();
+
+  // Category accessibility filter
+  const categoryCondition = {
+    status: 'APPROVED',
+    OR: [
+      { isPublic: true },
+    ]
+  };
+
+  if (currentUserId) {
+    const accessibleCategoryIds = (await prisma.categoryAccess.findMany({
+      where: { userId: currentUserId },
+      select: { categoryId: true },
+    })).map(a => a.categoryId);
+
+    if (accessibleCategoryIds.length > 0) {
+      categoryCondition.OR.push({ id: { in: accessibleCategoryIds } });
+    }
+    categoryCondition.OR.push({ createdById: currentUserId });
+  }
+
+  const [categories, images] = await Promise.all([
+    // Categories matching query
+    prisma.category.findMany({
+      where: {
+        name: { contains: query, mode: 'insensitive' },
+        ...categoryCondition,
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+      take: 5,
+    }),
+    // Images matching query
+    prisma.image.findMany({
+      where: {
+        status: 'APPROVED',
+        category: categoryCondition,
+        title: { contains: query, mode: 'insensitive' },
+      },
+      select: {
+        id: true,
+        title: true,
+      },
+      take: 5,
+    }),
+  ]);
+
+  return { categories, images, users: [] };
 };

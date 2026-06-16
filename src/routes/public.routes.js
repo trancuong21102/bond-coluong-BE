@@ -18,4 +18,7 @@ router.get('/images', optionalAuthMiddleware, validate(publicImagesQuerySchema),
 router.get('/images/:id', optionalAuthMiddleware, validate(deleteImageSchema), asyncHandler(publicController.getPublicImageById));
 router.get('/images/:id/related', validate(deleteImageSchema), asyncHandler(publicController.getRelatedImages));
 
+// Search suggestions
+router.get('/search/suggestions', optionalAuthMiddleware, asyncHandler(publicController.getSearchSuggestions));
+
 export default router;

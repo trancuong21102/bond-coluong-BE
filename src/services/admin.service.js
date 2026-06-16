@@ -173,8 +173,9 @@ export const getAllImages = async ({ status, categoryId, uploadedById, page = 1,
 
   if (search) {
     where.OR = [
-      { title: { contains: search } },
-      { description: { contains: search } },
+      { title: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+      { category: { name: { contains: search, mode: 'insensitive' } } },
     ];
   }
 
