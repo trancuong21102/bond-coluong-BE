@@ -16,7 +16,7 @@ router.get('/categories/:slug/images', optionalAuthMiddleware, validate(getCateg
 // Image public routes
 router.get('/images', optionalAuthMiddleware, validate(publicImagesQuerySchema), asyncHandler(publicController.getPublicImages));
 router.get('/images/:id', optionalAuthMiddleware, validate(deleteImageSchema), asyncHandler(publicController.getPublicImageById));
-router.get('/images/:id/related', validate(deleteImageSchema), asyncHandler(publicController.getRelatedImages));
+router.get('/images/:id/related', optionalAuthMiddleware, validate(deleteImageSchema), asyncHandler(publicController.getRelatedImages));
 
 // Search suggestions
 router.get('/search/suggestions', optionalAuthMiddleware, asyncHandler(publicController.getSearchSuggestions));

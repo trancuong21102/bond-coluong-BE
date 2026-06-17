@@ -326,31 +326,61 @@ export const getRelatedImages = async (id, currentUserId, limit = 12) => {
     }
   }
 
-  return await prisma.image.findMany({
+  // Get all candidate related image IDs in the same category
+  const candidates = await prisma.image.findMany({
     where: {
       categoryId: image.categoryId,
       status: 'APPROVED',
       id: { not: id },
     },
-    include: {
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      uploadedBy: {
-        select: {
-          id: true,
-          name: true,
-          avatar: true,
-        },
-      },
+    select: {
+      id: true,
     },
-    orderBy: { createdAt: 'desc' },
-    take: limit,
   });
+
+  const shuffle = (array) => {
+    let m = array.length, t, i;
+    while (m) {
+      i = Math.floor(Math.random() * m--);
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+    return array;
+  };
+
+  const shuffledIds = shuffle(candidates.map(c => c.id)).slice(0, limit);
+
+  let items = [];
+  if (shuffledIds.length > 0) {
+    const fetchedItems = await prisma.image.findMany({
+      where: {
+        id: { in: shuffledIds },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        uploadedBy: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+
+    // Map back to preserve the shuffled order
+    const itemMap = new Map(fetchedItems.map(item => [item.id, item]));
+    items = shuffledIds.map(id => itemMap.get(id)).filter(Boolean);
+  }
+
+  return items;
 };
 
 /**
