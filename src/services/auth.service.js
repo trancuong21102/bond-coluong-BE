@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma.js';
 import { uploadToCloudinary } from '../utils/cloudinaryHelper.js';
 import deleteFile from '../utils/deleteFile.js';
+import { sendAdminNewUserNotification } from './email.service.js';
 
 /**
  * Register a new user in the database.
@@ -37,6 +38,11 @@ export const register = async ({ name, email, password }) => {
       createdAt: true,
       updatedAt: true,
     },
+  });
+
+  // Notify admin via email about the new user registration asynchronously
+  sendAdminNewUserNotification(user).catch((err) => {
+    console.error('Failed to send admin notification email:', err);
   });
 
   return user;

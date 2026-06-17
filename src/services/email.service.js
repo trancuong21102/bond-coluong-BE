@@ -85,9 +85,9 @@ export const sendAccessRequestEmail = async ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          sender: { 
-            name: 'Pinterest Mini', 
-            email: process.env.SMTP_USER || 'no-reply@pinterestmini.com' 
+          sender: {
+            name: 'Pinterest Mini',
+            email: process.env.SMTP_USER || 'no-reply@pinterestmini.com'
           },
           to: [{ email: toEmail }],
           subject: `[Pinterest Mini] ${requesterName} xin cấp quyền xem danh mục ${categoryName}`,
@@ -122,10 +122,100 @@ export const sendAccessRequestEmail = async ({
     if (info.messageId && !process.env.SMTP_USER) {
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     }
-    
+
     return info;
   } catch (error) {
     console.error('Error sending email via SMTP:', error);
     throw new Error('Lỗi khi gửi email (Timeout/SMTP blocked)');
+  }
+};
+
+/**
+ * Gửi email thông báo cho Admin khi có user mới đăng ký
+ */
+export const sendAdminNewUserNotification = async (newUser) => {
+  if (!transporter && !process.env.BREVO_API_KEY) await initEmailService();
+
+  const toEmail = process.env.ADMIN_NOTIFICATION_EMAIL || process.env.SMTP_USER;
+
+  const htmlTemplate = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+      <h2 style="color: #333; border-bottom: 2px solid #E60023; padding-bottom: 10px;">Thông báo: Người dùng mới đăng ký</h2>
+      <p style="font-size: 16px; color: #555;">
+        Chào Admin,
+      </p>
+      <p style="font-size: 16px; color: #555;">
+        Hệ thống vừa ghi nhận một tài khoản mới đăng ký thành công. Dưới đây là thông tin chi tiết:
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px;">
+        <tr>
+          <td style="padding: 8px 0; font-weight: bold; width: 150px; color: #777;">Họ tên:</td>
+          <td style="padding: 8px 0; color: #333;"><strong>${newUser.name}</strong></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; font-weight: bold; color: #777;">Email:</td>
+          <td style="padding: 8px 0; color: #333;">${newUser.email}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; font-weight: bold; color: #777;">Thời gian đăng ký:</td>
+          <td style="padding: 8px 0; color: #333;">${new Date(newUser.createdAt).toLocaleString('vi-VN')}</td>
+        </tr>
+      </table>
+      <p style="font-size: 14px; color: #999; border-top: 1px solid #e0e0e0; padding-top: 15px; margin-top: 20px;">
+        Đây là email tự động từ hệ thống Pinterest Mini.
+      </p>
+    </div>
+  `;
+
+  const subject = `[Pinterest Mini] Thông báo: Người dùng mới ${newUser.name} (${newUser.email}) vừa đăng ký`;
+
+  // 1. Gửi qua Brevo HTTP API nếu có API key
+  if (process.env.BREVO_API_KEY) {
+    try {
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sender: {
+            name: 'Pinterest Mini',
+            email: process.env.SMTP_USER || 'no-reply@pinterestmini.com'
+          },
+          to: [{ email: toEmail }],
+          subject: subject,
+          htmlContent: htmlTemplate,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Brevo API Error:', errorData);
+        throw new Error('Lỗi gửi mail API');
+      }
+
+      console.log('Admin registration notification email sent successfully via Brevo HTTP API');
+      return await response.json();
+    } catch (error) {
+      console.error('Error sending admin notification via Brevo:', error);
+      // Không ném lỗi ra ngoài để tránh làm sập luồng đăng ký của user
+    }
+  }
+
+  // 2. Gửi qua SMTP
+  try {
+    const info = await transporter.sendMail({
+      from: '"Pinterest Mini" <no-reply@pinterestmini.com>',
+      to: toEmail,
+      subject: subject,
+      html: htmlTemplate,
+    });
+
+    console.log('Admin registration notification email sent via SMTP: %s', info.messageId);
+    return info;
+  } catch (error) {
+    console.error('Error sending admin notification email via SMTP:', error);
+    // Không ném lỗi ra ngoài để tránh làm sập luồng đăng ký của user
   }
 };
